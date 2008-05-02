@@ -76,4 +76,29 @@ public class Database extends DatabaseConnectionAndName {
 			thisTable.assertStructureSame(otherTable);
 		}
 	}
+	
+	/**
+	 * Compare databases
+	 * @param other Other database to compare to
+	 * @param tableNames Array list of table names to compare
+	 * @return Updates queries
+	 * @throws SQLException In case of database problems 
+	 */
+	public StringBuffer compare(Database other, ArrayList<String> tableNames) throws SQLException
+	{
+		assertStructureSame(other);
+		StringBuffer result = new StringBuffer();
+		Iterator<Table> itS = tables.iterator();
+		Iterator<Table> itO = other.getTables().iterator();
+		while(itS.hasNext())
+		{
+			Table tableS = itS.next();
+			Table tableO = itO.next();
+			if(tableNames.contains(tableS.getName()))
+			{
+				result.append(tableS.compare(tableO));
+			}
+		}
+		return result;
+	}
 }
